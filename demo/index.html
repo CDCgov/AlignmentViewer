@@ -1,0 +1,45 @@
+<!doctype HTML>
+<html lang="en">
+<head>
+	<title>AlignmentViewer Demo</title>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="../dist/alignment-viewer.js"></script>
+<script type="text/fasta" id="sample">>derice
+ACTGACTAGCTAGCTAACTG
+>sanka
+GCATCGTAGCTAGCTACGAT
+>junior
+CATCGATCGTACGTACGTAG
+>yul
+ATCGATCGATCGTACGATCG
+</script>
+
+<script type="text/javascript">
+
+$(function(){
+	var seqs = [], currentSeq = {};
+	$('#sample').text().split(/[\r\n]+/g).forEach((line, i) => {
+		if(/^\s*$/.test(line)) return;
+		if(line[0] === ">"){
+			if(i > 0) seqs.push(currentSeq);
+			currentSeq = {
+				id: line.slice(1),
+				seq: ''
+			};
+		} else if(line[0] === ";") {
+			//Ignore FASTA Comment
+		} else {
+			currentSeq.seq += line;
+		}
+	});
+	seqs.push(currentSeq);
+
+	$('#alignment-viewer').AlignmentViewer({sequences: seqs});
+});
+</script>
+
+</head>
+<body>
+	<div id="alignment-viewer"></div>
+</body>
+</html>
