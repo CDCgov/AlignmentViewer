@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
 	<title>AlignmentViewer Demo</title>
-	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="../dist/alignment-viewer.js"></script>
-<script type="text/fasta" id="sample">>derice
+	<style>
+
+	</style>
+</head>
+<body>
+
+	<label for="sample">FASTA:</label><textarea id="sample">>derice
 ACTGACTAGCTAGCTAACTG
 >sanka
 GCATCGTAGCTAGCTACGAT
@@ -12,34 +19,41 @@ GCATCGTAGCTAGCTACGAT
 CATCGATCGTACGTACGTAG
 >yul
 ATCGATCGATCGTACGATCG
-</script>
+</textarea><br />
 
-<script type="text/javascript">
+	<label for="avwidth">Width:  </label><input type="number" id="avwidth" value="10"></input><br />
+	<label for="avheight">Height: </label><input type="number" id="avheight" value="10"></input>
 
-$(function(){
-	var seqs = [], currentSeq = {};
-	$('#sample').text().split(/[\r\n]+/g).forEach((line, i) => {
-		if(/^\s*$/.test(line)) return;
-		if(line[0] === ">"){
-			if(i > 0) seqs.push(currentSeq);
-			currentSeq = {
-				id: line.slice(1),
-				seq: ''
-			};
-		} else if(line[0] === ";") {
-			//Ignore FASTA Comment
-		} else {
-			currentSeq.seq += line;
+	<div id="alignment-viewer">Output: </div>
+
+	<script type="text/javascript">
+
+	$(function(){
+		function scrapeFASTA(){
+			var seqs = [], currentSeq = '';
+			$('#sample').val().split(/[\r\n]+/g).forEach((line, i) => {
+				if(/^\s*$/.test(line)) return;
+				if(line[0] === ">"){
+					if(i > 0) seqs.push(currentSeq);
+					currentSeq = '';
+				} else if(line[0] === ";") {
+					//Ignore FASTA Comment
+				} else {
+					currentSeq += line;
+				}
+			});
+			seqs.push(currentSeq);
+			return seqs;
 		}
+
+		alignmentViewer('#alignment-viewer', scrapeFASTA(), 10, 10);
+
+		$('#sample, #avheight, #avwidth').on('input', function(){
+			var seqs = scrapeFASTA();
+			$('#alignment-viewer canvas').remove();
+			alignmentViewer('#alignment-viewer', seqs, parseFloat($('#avwidth').val()), parseFloat($('#avheight').val()));
+		});
 	});
-	seqs.push(currentSeq);
-
-	$('#alignment-viewer').AlignmentViewer({sequences: seqs});
-});
-</script>
-
-</head>
-<body>
-	<div id="alignment-viewer"></div>
+	</script>
 </body>
 </html>
