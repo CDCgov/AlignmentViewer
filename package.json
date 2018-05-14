@@ -4,9 +4,9 @@
   "description": "A jQuery plugin for visualizing genetic sequence alignments",
   "main": "src/index.js",
   "scripts": {
-    "clean": "rimraf dist/*",
-    "build": "npm run clean && cp src/index.js dist/alignment-viewer.js && uglifyjs src/index.js -o dist/alignment-viewer.min.js",
-    "start": "npm run build && http-server"
+    "clean": "rm -rf dist/*.min.js",
+    "build": "npm run clean && node_modules/uglify-es/bin/uglifyjs src/index.js -o dist/alignment-viewer.min.js",
+    "start": "npm run build && node_modules/http-server/bin/http-server"
   },
   "repository": {
     "type": "git",
@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/AABoyles/alignment-viewer",
   "dependencies": {
+    "d3": "^5.4.0"
   },
   "devDependencies": {
     "http-server": "^0.11.1",
-    "rimraf": "^2.5.2",
     "uglify-es": "^3.3.9"
   }
 }
