@@ -1,25 +1,43 @@
-(function($){
-	$.fn.AlignmentViewer = function(options){
-		let opts = $.extend({}, $.fn.AlignmentViewer.defaults, options);
-		if($('head > style.alignment-styles').length == 0){
-			$('head').append(`<style class="alignment-styles">
-	.av-row {font-family: monospace;}
-	.av-n-A, .av-n-a {background-color: lightgreen;}
-	.av-n-C, .av-n-c {background-color: yellow;}
-	.av-n-G, .av-n-g {background-color: lightorange;}
-	.av-n-T, .av-n-t {background-color: lightsalmon;}
-</style>`);
-		}
-		let n = opts.sequences.length;
-		for(let i = 0; i < n; i++){
-			let content = opts.sequences[i].seq
-				.toUpperCase()
-				.split('')
-				.map(n => `<span class="av-n-${n}">${n}</span>`)
-				.join('');
-			this.append(`<div class='av-row av-theme-default'>${content}</div>`);
-		}
-		return this;
+(function (root, factory){
+  if(typeof define === 'function' && define.amd){
+    define(['d3'], function (d3){
+      return (root.alignmentViewer = factory(d3));
+    });
+  } else if(typeof module === 'object' && module.exports){
+    module.exports = factory(require('d3'));
+  } else {
+    root.alignmentViewer = factory(root.d3);
+  }
+}(typeof self !== 'undefined' ? self : this, function(d3){
+	var alignmentViewer = function(target, seqs, width, height, colors){
+		if(!width) width = 1;
+		if(!height) height = 1;
+		if(!colors) colors = {
+			'A' : 'lightgreen',
+			'G' : 'orange',
+			'C' : 'yellow',
+			'T' : 'red'
+    };
+		var longest = 0;
+		seqs.forEach(s => { if(s.length > longest){ longest = s.length; }});
+    var canvas = d3.select(target).append('canvas')
+			.attr('height', height*seqs.length)
+			.attr('width', width*longest);
+    var context = canvas.node().getContext('2d');
+    seqs.forEach(function(s, row){
+			if(s.length > longest) longest = s.length;
+      s.toUpperCase().split('').forEach(function(c, col){
+        if(!c in colors) return;
+        context.beginPath();
+				context.fillStyle = colors[c];
+        context.fillRect(col*width, row*height, width, height);
+        context.closePath();
+      });
+    });
+		return canvas;
 	};
-	$.fn.AlignmentViewer.defaults = {};
-}(jQuery));
+  // Just return a value to define the module export.
+  // This example returns an object, but the module
+  // can return a function as the exported value.
+  return alignmentViewer;
+}));
