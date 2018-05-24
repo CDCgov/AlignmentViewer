@@ -1,40 +1,51 @@
 (function (root, factory){
   if(typeof define === 'function' && define.amd){
-    define(['d3'], function (d3){
-      return (root.alignmentViewer = factory(d3));
+    define([], function(){
+      return (root.alignmentViewer = factory());
     });
   } else if(typeof module === 'object' && module.exports){
-    module.exports = factory(require('d3'));
+    module.exports = factory();
   } else {
-    root.alignmentViewer = factory(root.d3);
+    root.alignmentViewer = factory();
   }
-}(typeof self !== 'undefined' ? self : this, function(d3){
-	var alignmentViewer = function(target, seqs, width, height, colors){
-		if(!width) width = 1;
-		if(!height) height = 1;
-		if(!colors) colors = {
-			'A' : 'lightgreen',
-			'G' : 'orange',
-			'C' : 'yellow',
-			'T' : 'red'
-    };
+}(typeof self !== 'undefined' ? self : this, function(){
+	var alignmentViewer = function(seqs, config){
+    config = Object.assign({
+      width: 1,
+      height: 1,
+      colors: {
+  			'A' : 'lightgreen',
+  			'G' : 'orange',
+  			'C' : 'yellow',
+  			'T' : 'red'
+      }
+    }, config);
 		var longest = 0;
-		seqs.forEach(s => { if(s.length > longest){ longest = s.length; }});
-    var canvas = d3.select(target).append('canvas')
-			.attr('height', height*seqs.length)
-			.attr('width', width*longest);
-    var context = canvas.node().getContext('2d');
-    seqs.forEach(function(s, row){
-			if(s.length > longest) longest = s.length;
-      s.toUpperCase().split('').forEach(function(c, col){
-        if(!c in colors) return;
+    var n = seqs.length;
+    for(var i = 0; i < n; i++){
+      var s = seqs[i];
+      if(s.length > longest){
+        longest = s.length;
+      }
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = longest * config.width;
+    canvas.height = seqs.length * config.height;
+    var context = canvas.getContext('2d', { alpha: false });
+    for(var row = 0; row < n; row++){
+      var s = seqs[row].toUpperCase().split('');
+      var m = s.length;
+      for(var col = 0; col < m; col++){
+        var c = s[col];
+        if(!c in config.colors) return;
         context.beginPath();
-				context.fillStyle = colors[c];
-        context.fillRect(col*width, row*height, width, height);
+				context.fillStyle = config.colors[c];
+        context.fillRect(col*config.width, row*config.height, config.width, config.height);
         context.closePath();
-      });
-    });
-		return canvas;
+      }
+    }
+    if(config.callback) config.callback(canvas);
+    else return canvas;
 	};
   // Just return a value to define the module export.
   // This example returns an object, but the module
