@@ -47,18 +47,21 @@ ATCGATCGATCGTACGATCG
 
 		var av = $('#alignment-viewer');
 
-		var canvas = alignmentViewer(scrapeFASTA(), {width: 0+$('#avwidth').val(), height: 0+$('#avheight').val()});
-		av.append(canvas);
+		function update(){
+			alignmentViewer(scrapeFASTA(), {
+				width: 0+$('#avwidth').val(),
+				height: 0+$('#avheight').val()}
+			).then(function(canvas){
+				av.append(canvas);
+			});
+		}
 
 		$('#sample, #avheight, #avwidth').on('input', function(){
-			var seqs = scrapeFASTA();
 			av.find('canvas').remove();
-			alignmentViewer(seqs, {
-				width: 0+$('#avwidth').val(),
-				height: 0+$('#avheight').val(),
-				callback: function(canvas){ av.append(canvas); }
-			});
+			update();
 		});
+
+		update();
 	});
 	</script>
 </body>

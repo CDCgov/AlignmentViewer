@@ -44,8 +44,7 @@
         context.closePath();
       }
     }
-    if(config.callback) config.callback(canvas);
-    else return canvas;
+    return new Promise(function(resolve){ resolve(canvas); });
 	};
   // Just return a value to define the module export.
   // This example returns an object, but the module
