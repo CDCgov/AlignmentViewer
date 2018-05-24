@@ -1,0 +1,51 @@
+<!doctype HTML>
+<html lang="en">
+<head>
+	<title>AlignmentViewer Demo</title>
+	<script src="../dist/alignment-viewer.js"></script>
+	<style>
+
+	</style>
+</head>
+<body>
+	Bases: <input type="text" id="bases" value="ACGT"></input><br />
+	Number of Sequences: <input type="number" id="n" min="1" value="100" step="1" /><br />
+	Length of Sequence: <input type="number" id="k" min="1" value="2048" step="1" /><br />
+	<p id="outcome"></p>
+	<div id="output"></div>
+	<script type="text/javascript">
+		function reroll(){
+			var bases = document.getElementById('bases').value;
+			var l = bases.length;
+			var n = 0|document.getElementById('n').value;
+			var k = 0|document.getElementById('k').value;
+			var seqs = Array(n);
+			for(var i = 0; i < n; i++){
+				var string = new Array(k);
+				for(var j = 0; j < k; j++){
+					string[j] = bases[Math.floor(Math.random() * l)];
+				}
+				seqs[i] = string.join('');
+			}
+			return seqs;
+		}
+
+		function rerun(){
+			var seqs = reroll();
+			var start = Date.now();
+			alignmentViewer(seqs).then(function(canvas){
+				var time = Date.now() - start;
+				document.getElementById('outcome').innerHTML = time + 'ms to generate a ' + seqs.length + ' x ' + seqs[0].length + ' visualization, or roughly ' + (1000*time/(seqs.length * seqs[0].length)).toLocaleString() + 'μs per cell';
+				document.getElementById('output').innerHTML = "";
+				document.getElementById('output').appendChild(canvas);
+			});
+		}
+
+		document.getElementById('bases').addEventListener('input', rerun);
+		document.getElementById('n').addEventListener('input', rerun);
+		document.getElementById('k').addEventListener('input', rerun);
+
+		rerun();
+	</script>
+</body>
+</html>
