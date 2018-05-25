@@ -32,9 +32,12 @@ See [the Source Code](https://github.com/AABoyles/AlignmentViewer/blob/master/de
   'A' : 'lightgreen',
   'G' : 'orange',
   'C' : 'yellow',
-  'T' : 'red'
+  'T' : 'red',
+  'ambig': 'white'
 }
 ```
+
+Fun fact: It's actually alphabet-agnostic, so you can map any character to a color and see it. So you can visualize, say, protein sequences by just setting `config.colors` to an object mapping from the IUPAC 1-letter codes to the desired color.
 
 ## Isn't this what [MSAViewer](http://msa.biojs.net/) is for?
 
