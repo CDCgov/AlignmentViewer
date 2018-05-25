@@ -17,7 +17,8 @@
   			'A' : 'lightgreen',
   			'G' : 'orange',
   			'C' : 'yellow',
-  			'T' : 'red'
+  			'T' : 'red',
+        'ambig': 'white'
       }
     }, config);
 		var longest = 0;
@@ -37,9 +38,8 @@
       var m = s.length;
       for(var col = 0; col < m; col++){
         var c = s[col];
-        if(!c in config.colors) return;
         context.beginPath();
-				context.fillStyle = config.colors[c];
+				context.fillStyle = (c in config.colors) ? config.colors[c] : config.colors['ambig'];
         context.fillRect(col*config.width, row*config.height, config.width, config.height);
         context.closePath();
       }
