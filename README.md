@@ -26,7 +26,8 @@ See [the Source Code](https://github.com/AABoyles/AlignmentViewer/blob/master/de
 * `config` - OPTIONAL, an object containing any of the following attributes:
 * `config.width` - OPTIONAL, the width (in pixels) _of each cell_. Please note that this is not the width of the output figure. Defaults to 10
 * `config.height` - OPTIONAL, the height (in pixels) _of each cell_. Please note that this is not the height of the output figure. Defaults to 10
-* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Defaults to a close analog of the [Taylor color scheme](http://www.jalview.org/help/html/colourSchemes/taylor.html):
+* `config.showChar` - OPTIONAL, should the character be rendered in the cell? Defaults to false
+* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Defaults to the [Taylor color scheme](http://www.jalview.org/help/html/colourSchemes/taylor.html):
 ```
 {
   'A' : 'lightgreen',

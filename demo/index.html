@@ -21,7 +21,8 @@ ATCGATCGATCGTACGATCG
 </textarea><br />
 
 	<label for="avwidth">Width:  </label><input type="number" id="avwidth" value="10"></input><br />
-	<label for="avheight">Height: </label><input type="number" id="avheight" value="10"></input>
+	<label for="avheight">Height: </label><input type="number" id="avheight" value="10"></input><br />
+	<label for="showChar">Show Characters?</label><input type="checkbox" id="showChar"></input>
 
 	<div id="alignment-viewer">Output: </div>
 
@@ -49,14 +50,15 @@ ATCGATCGATCGTACGATCG
 
 		function update(){
 			alignmentViewer(scrapeFASTA(), {
-				width: 0+$('#avwidth').val(),
-				height: 0+$('#avheight').val()}
-			).then(function(canvas){
+				width: 0|$('#avwidth').val(),
+				height: 0|$('#avheight').val(),
+				showChar: $('#showChar').is(':checked')
+			}).then(function(canvas){
 				av.append(canvas);
 			});
 		}
 
-		$('#sample, #avheight, #avwidth').on('input', function(){
+		$('#sample, #avheight, #avwidth, #showChar').on('input', function(){
 			av.find('canvas').remove();
 			update();
 		});
