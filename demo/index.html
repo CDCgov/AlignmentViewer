@@ -30,11 +30,15 @@ ATCGATCGATCGTACGATCG
 
 	$(function(){
 		function scrapeFASTA(){
-			var seqs = [], currentSeq = '';
+			var seqs = [], currentSeq = '', currentID = '';
 			$('#sample').val().split(/[\r\n]+/g).forEach((line, i) => {
 				if(/^\s*$/.test(line)) return;
 				if(line[0] === ">"){
-					if(i > 0) seqs.push(currentSeq);
+					if(i > 0) seqs.push({
+						id: currentID,
+						seq: currentSeq
+					});
+					currentID = line.slice(1);
 					currentSeq = '';
 				} else if(line[0] === ";") {
 					//Ignore FASTA Comment
@@ -42,7 +46,10 @@ ATCGATCGATCGTACGATCG
 					currentSeq += line;
 				}
 			});
-			seqs.push(currentSeq);
+			seqs.push({
+				id: currentID,
+				seq: currentSeq
+			});
 			return seqs;
 		}
 
