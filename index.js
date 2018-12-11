@@ -21,7 +21,8 @@
         'ambig': '#ffffff'
       },
       showChar: false,
-      showID: true
+      showID: true,
+      useWorker: true
     }, config);
 		var longest = 0;
     var offset = 0;
