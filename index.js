@@ -39,17 +39,19 @@
     var canvas = document.createElement('canvas');
     canvas.width = longest * config.width + offset;
     canvas.height = seqs.length * config.height;
-    var context = canvas.getContext('2d', { alpha: true });
+    var context = canvas.getContext('2d', { alpha: false });
+    context.fillStyle = '#ffffff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
     context.font = (config.height-2) + 'px mono';
     for(var row = 0; row < n; row++){
-      var s = seqs[row].seq.toUpperCase().split('');
+      var s = seqs[row].seq.toUpperCase();
       var m = s.length;
       var y = row*config.height;
       if(config.showID){
         context.textAlign = 'right';
         context.textBaseline = 'middle';
         context.fillStyle = 'black';
-        context.fillText(seqs[row].id, offset, y+ySpacer, offset-config.width/2);
+        context.fillText(seqs[row].id, offset, y+ySpacer, offset);
       }
       for(var col = 0; col < m; col++){
         var c = s[col], x = col*config.width+offset;
