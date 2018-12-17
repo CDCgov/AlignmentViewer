@@ -1,6 +1,6 @@
 {
   "name": "alignment-viewer",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A simple widget for visualizing genetic sequence alignments",
   "main": "index.js",
   "scripts": {
