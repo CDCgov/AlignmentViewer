@@ -19,7 +19,7 @@ alignmentViewer(sequences).then(function(canvas){
 ```
 ![][sampleOutput]
 
-See [the Source Code](https://github.com/AABoyles/AlignmentViewer/blob/master/demo/index.html) of [the Demo](https://aaboyles.github.io/AlignmentViewer/demo) for a slightly fleshier [live version](https://aaboyles.github.io/AlignmentViewer/demo).
+See [the Source Code](https://github.com/cdcgov/AlignmentViewer/blob/master/demo/index.html) of [the Demo](https://cdcgov.github.io/AlignmentViewer/demo) for a slightly fleshier [live version](https://cdcgov.github.io/AlignmentViewer/demo).
 
 ## Syntax
 
