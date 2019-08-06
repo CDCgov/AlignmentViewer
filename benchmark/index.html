@@ -1,5 +1,6 @@
 <!doctype HTML>
 <html lang="en">
+
 <head>
 	<title>AlignmentViewer Demo</title>
 	<script src="../dist/alignment-viewer.js"></script>
@@ -7,37 +8,38 @@
 
 	</style>
 </head>
+
 <body>
-	Bases: <input type="text" id="bases" value="ACGT"></input><br />
-	Number of Sequences: <input type="number" id="n" min="1" value="100" step="1" /><br />
-	Length of Sequence: <input type="number" id="k" min="1" value="2048" step="1" /><br />
-	<p id="outcome"></p>
+	<label>Bases: <input type="text" id="bases" value="ACGT" /></label><br />
+	<label>Number of Sequences: <input type="number" id="n" min="1" value="100" step="1" /></label><br />
+	<label>Length of Sequence: <input type="number" id="k" min="1" value="2048" step="1" /></label><br />
 	<div id="output"></div>
+	<p id="outcome"></p>
 	<script type="text/javascript">
-		function reroll(){
+		function reroll() {
 			var bases = document.getElementById('bases').value;
 			var l = bases.length;
-			var n = 0|document.getElementById('n').value;
-			var k = 0|document.getElementById('k').value;
+			var n = 0 | document.getElementById('n').value;
+			var k = 0 | document.getElementById('k').value;
 			var seqs = Array(n);
-			for(var i = 0; i < n; i++){
+			for (var i = 0; i < n; i++) {
 				var string = new Array(k);
-				for(var j = 0; j < k; j++){
+				for (var j = 0; j < k; j++) {
 					string[j] = bases[Math.floor(Math.random() * l)];
 				}
-				seqs[i] = string.join('');
+				seqs[i] = { id: i, seq: string.join('') };
 			}
 			return seqs;
 		}
 
-		function rerun(){
+		function rerun() {
 			var seqs = reroll();
 			var start = Date.now();
-			alignmentViewer(seqs).then(function(canvas){
+			alignmentViewer(seqs).then(function (image) {
 				var time = Date.now() - start;
-				document.getElementById('outcome').innerHTML = time + 'ms to generate a ' + seqs.length + ' x ' + seqs[0].length + ' visualization, or roughly ' + (1000*time/(seqs.length * seqs[0].length)).toLocaleString() + 'μs per cell';
+				document.getElementById('outcome').innerHTML = time + 'ms to generate a ' + seqs.length + ' x ' + seqs[0].seq.length + ' visualization, or roughly ' + (1000 * time / (seqs.length * seqs[0].seq.length)).toLocaleString() + 'μs per cell';
 				document.getElementById('output').innerHTML = "";
-				document.getElementById('output').appendChild(canvas);
+				document.getElementById('output').append(image);
 			});
 		}
 
@@ -48,4 +50,5 @@
 		rerun();
 	</script>
 </body>
+
 </html>
