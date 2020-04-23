@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/CDCgov/AlignmentViewer",
   "devDependencies": {
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.1",
     "uglify-es": "^3.3.9"
   }
 }
