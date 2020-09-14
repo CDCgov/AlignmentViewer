@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf dist/*.min.js",
     "build": "npm run clean && node_modules/uglify-es/bin/uglifyjs index.js -o dist/alignment-viewer.min.js",
-    "start": "npm run build && node_modules/http-server/bin/http-server"
+    "start": "npx http-server"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/CDCgov/AlignmentViewer",
   "devDependencies": {
-    "http-server": "^0.12.1",
     "uglify-es": "^3.3.9"
   }
 }
