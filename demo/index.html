@@ -4,9 +4,6 @@
 	<title>AlignmentViewer Demo</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="../dist/alignment-viewer.js"></script>
-	<style>
-
-	</style>
 </head>
 <body>
 
@@ -18,11 +15,11 @@ GCATCGTAGCTAGCTACGAT
 CATCGATCGTACGTACGTAG
 >yul
 ATCGATCGATCGTACGATCG
-</textarea><br />
+</textarea><br>
 
-	<label for="avwidth">Width:  </label><input type="number" id="avwidth" value="10"></input><br />
-	<label for="avheight">Height: </label><input type="number" id="avheight" value="10"></input><br />
-	<label for="showChar">Show Characters?</label><input type="checkbox" id="showChar"></input>
+	<label for="avwidth">Width:  </label><input type="number" id="avwidth" value="10"><br>
+	<label for="avheight">Height: </label><input type="number" id="avheight" value="10"><br>
+	<label for="showChar">Show Characters?</label><input type="checkbox" id="showChar">
 
 	<div id="alignment-viewer">Output: </div>
 
@@ -55,20 +52,25 @@ ATCGATCGATCGTACGATCG
 
 		var av = $('#alignment-viewer');
 
+		var cache = scrapeFASTA();
+
 		function update(){
-			alignmentViewer(scrapeFASTA(), {
+			alignmentViewer(cache, {
 				width: 0|$('#avwidth').val(),
 				height: 0|$('#avheight').val(),
 				showChar: $('#showChar').is(':checked')
 			}).then(function(canvas){
+				av.find('canvas').remove();
 				av.append(canvas);
 			});
 		}
 
-		$('#sample, #avheight, #avwidth, #showChar').on('input', function(){
-			av.find('canvas').remove();
+		$('#sample').on('input', function(){
+			cache = scrapeFASTA();
 			update();
 		});
+
+		$('#avheight, #avwidth, #showChar').on('input', update);
 
 		update();
 	});
