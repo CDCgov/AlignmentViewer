@@ -9,20 +9,21 @@
     root.alignmentViewer = factory();
   }
 }(typeof self !== 'undefined' ? self : this, function () {
-  return (seqs, config) => {
+  'use strict';
+  return (seqs, config = {}) => {
     config = Object.assign({
       width: 1,
       height: 1,
-      colors: {
+      showChar: false
+    }, config, {
+      colors: Object.assign({
         'A': '#ccff00',
         'C': '#ffff00',
         'G': '#ff9900',
         'T': '#ff6600',
         'ambig': '#ffffff'
-      },
-      showChar: false,
-      useWorker: true
-    }, config);
+      }, ('colors' in config) ? config.colors : {}),
+    });
 
     return new Promise(resolve => {
       let longest = 0;
@@ -32,25 +33,31 @@
         let seq = s.seq.toUpperCase();
         if (seq.length > longest) longest = seq.length;
       }
-      config.height |= 0;
-      config.width |= 0;
+      let ch = Math.ceil(config.height);
+      let cw = Math.ceil(config.width);
       let width = longest * config.width;
       let height = seqs.length * config.height;
       let canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
       let context = canvas.getContext('2d', { alpha: false });
-      for (let row = 0; row < n; row ++) {
-        let seq = seqs[row].seq;
-        let y = row * config.height;
-        for (let col = 0; col < longest; col++) {
-          let c = seq[col];
-          if(!c) break;
-          let x = col * config.width;
-          context.fillStyle = (c in config.colors) ? config.colors[c] : config.colors['ambig'];
-          context.fillRect(x, y, config.width, config.height);
+      context.fillStyle = config.colors['ambig'];
+      context.fillRect(0, 0, width, height);
+      Object.keys(config.colors).forEach(nucleotide => {
+        if(nucleotide == 'ambig') return;
+        context.fillStyle = config.colors[nucleotide];
+        for (let row = 0; row < n; row ++) {
+          let seq = seqs[row].seq;
+          let y = Math.floor(row * ch);
+          for (let col = 0; col < longest; col++) {
+            let c = seq[col];
+            if(!c) break;
+            if(c != nucleotide) continue;
+            let x = Math.floor(col * cw);
+            context.fillRect(x, y, cw, ch);
+          }
         }
-      }
+      });
       if(config.showChar){
         context.font = (config.height - 2) + 'px mono';
         context.textAlign = 'left';
@@ -58,12 +65,12 @@
         context.fillStyle = 'black';
         for (let row = 0; row < n; row++) {
           let seq = seqs[row].seq;
-          let y = row * config.height + config.height;
+          let y = row * ch + ch;
           for (let col = 0; col < longest; col++) {
             let c = seq[col];
             if(!c) break;
-            let x = col * config.width + config.width/3;
-            context.fillText(c, x, y, config.width);
+            let x = col * cw + cw/3;
+            context.fillText(c, x, y, cw);
           }
         }
       }
