@@ -1,11 +1,11 @@
 {
   "name": "alignment-viewer",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A simple widget for visualizing genetic sequence alignments",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf dist/*.min.js",
-    "build": "npm run clean && node_modules/uglify-es/bin/uglifyjs index.js -o dist/alignment-viewer.min.js",
+    "clean": "npx rimraf dist/*.min.js",
+    "build": "npm run clean && npx uglifyjs index.js -o dist/alignment-viewer.min.js",
     "start": "npx http-server"
   },
   "repository": {
@@ -18,8 +18,5 @@
   "bugs": {
     "url": "https://github.com/CDCgov/AlignmentViewer/issues"
   },
-  "homepage": "https://github.com/CDCgov/AlignmentViewer",
-  "devDependencies": {
-    "uglify-es": "^3.3.9"
-  }
+  "homepage": "https://github.com/CDCgov/AlignmentViewer"
 }
