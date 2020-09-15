@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "npx rimraf dist/*.min.js",
-    "build": "npm run clean && npx uglifyjs index.js -o dist/alignment-viewer.min.js",
+    "build": "npm run clean && npx uglify-es index.js -o dist/alignment-viewer.min.js",
     "start": "npx http-server"
   },
   "repository": {
