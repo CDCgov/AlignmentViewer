@@ -3,15 +3,37 @@
 
 <head>
 	<title>AlignmentViewer Demo</title>
-	<script src="../dist/alignment-viewer.js"></script>
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+			height: 100%;
+			width: 100%;
+		}
+		#controls {
+			position: fixed;
+			top: 1rem;
+			left: 1rem;
+			padding: .5rem;
+			background: rgba(255,255,255,.5);
+			border-radius: 0.5rem;
+			text-align: right;
+		}
+		#output {
+			height: inherit;
+		}
+	</style>
 </head>
 
 <body>
-	<label>Bases: <input type="text" id="bases" value="ACGT-"></label><br>
-	<label>Number of Sequences: <input type="number" id="n" min="1" value="1000" step="1"></label><br>
-	<label>Length of Sequence: <input type="number" id="k" min="1" value="2048" step="1"></label><br>
+	<div id="controls">
+		<label>Bases: <input type="text" id="bases" value="ACGT-"></label><br>
+		<label>Number of Sequences: <input type="number" id="n" min="1" value="1000" step="1"></label><br>
+		<label>Length of Sequence: <input type="number" id="k" min="1" value="2048" step="1"></label><br>
+		<p id="outcome"></p>
+	</div>
 	<div id="output"></div>
-	<p id="outcome"></p>
+	<script src="../dist/alignment-viewer.js"></script>
 	<script type="text/javascript">
 		function reroll() {
 			let bases = document.getElementById('bases').value;
@@ -33,10 +55,10 @@
 			let seqs = reroll();
 			let start = Date.now();
 			alignmentViewer(seqs).then(image => {
-				let time = Date.now() - start;
-				document.getElementById('outcome').innerHTML = time + 'ms to generate a ' + seqs.length + ' x ' + seqs[0].seq.length + ' visualization, or roughly ' + (1000 * time / (seqs.length * seqs[0].seq.length)).toLocaleString() + 'μs per cell';
 				document.getElementById('output').innerHTML = "";
 				document.getElementById('output').append(image);
+				let time = Date.now() - start;
+				document.getElementById('outcome').innerHTML = time + 'ms to generate a ' + seqs.length + ' x ' + seqs[0].seq.length + ' visualization,<br> or roughly ' + (1000000 * time / (seqs.length * seqs[0].seq.length)).toLocaleString() + 'ns per cell';
 			});
 		}
 
