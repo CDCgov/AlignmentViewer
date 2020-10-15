@@ -17,9 +17,9 @@ alignmentViewer(sequences).then(function(canvas){
   document.body.appendChild(canvas);
 });
 ```
-![][sampleOutput]
+![sampleOutput](https://raw.githubusercontent.com/CDCgov/AlignmentViewer/master/demo/demo.png)
 
-See [the Source Code](https://github.com/cdcgov/AlignmentViewer/blob/master/demo/index.html) of [the Demo](https://cdcgov.github.io/AlignmentViewer/demo) for a slightly fleshier [live version](https://cdcgov.github.io/AlignmentViewer/demo).
+See [the Source Code](https://github.com/cdcgov/AlignmentViewer/blob/master/demo/index.html) of [the Demo](https://cdcgov.github.io/AlignmentViewer/demo) for a slightly fleshier [live version](https://cdcgov.github.io/AlignmentViewer/demo). Also, check out [the benchmarking test](https://cdcgov.github.io/AlignmentViewer/benchmark/index.html).
 
 ## Syntax
 
