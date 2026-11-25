@@ -7,13 +7,13 @@ This repository was created for use by CDC programs to collaborate on public hea
 ## Demo
 
 ```{javascript}
-sequences = [
-  'ACTGACTAGCTAGCTAACTG',
-  'GCATCGTAGCTAGCTACGAT',
-  'CATCGATCGTACGTACGTAG',
-  'ATCGATCGATCGTACGATCG'
+const sequences = [
+  { id: 'derice', seq: 'ACTGACTAGCTAGCTAACTG' },
+  { id: 'sanka', seq: 'GCATCGTAGCTAGCTACGAT' },
+  { id: 'junior', seq: 'CATCGATCGTACGTACGTAG' },
+  { id: 'yul', seq: 'ATCGATCGATCGTACGATCG' }
 ];
-alignmentViewer(sequences).then(function(canvas){
+alignmentViewer(sequences, { width: 10, height: 10 }).then(function(canvas){
   document.body.appendChild(canvas);
 });
 ```
@@ -24,21 +24,23 @@ See [the Source Code](https://github.com/cdcgov/AlignmentViewer/blob/master/demo
 ## Syntax
 
 `alignmentViewer(seqs, config)` where:
-* `seqs` - an array of sequence strings
+* `seqs` - an array of objects, each with a string `seq` property (e.g. `{ id: 'derice', seq: 'ACTG...' }`). Other properties such as `id` are ignored. The objects are not modified. Sequences are drawn case-insensitively, so lowercase works.
 * `config` - OPTIONAL, an object containing any of the following attributes:
-* `config.width` - OPTIONAL, the width (in pixels) _of each cell_. Please note that this is not the width of the output figure. Defaults to 10
-* `config.height` - OPTIONAL, the height (in pixels) _of each cell_. Please note that this is not the height of the output figure. Defaults to 10
+* `config.width` - OPTIONAL, the width (in pixels) _of each cell_. Please note that this is not the width of the output figure. Defaults to 1. Fractional values are rounded up to whole pixels.
+* `config.height` - OPTIONAL, the height (in pixels) _of each cell_. Please note that this is not the height of the output figure. Defaults to 1. Fractional values are rounded up to whole pixels.
 * `config.showChar` - OPTIONAL, should the character be rendered in the cell? Defaults to false. Use with caution, significantly slows down rendering.
-* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Defaults to the [Taylor color scheme](http://www.jalview.org/help/html/colourSchemes/taylor.html):
+* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Colors you pass are merged over the defaults below, and keys should be uppercase. Any character without a color, including gaps, is drawn in the `ambig` color. Defaults:
 ```
 {
-  'A' : 'lightgreen',
-  'G' : 'orange',
-  'C' : 'yellow',
-  'T' : 'red',
-  'ambig': 'white'
+  'A': '#ccff00',
+  'C': '#ffff00',
+  'G': '#ff9900',
+  'T': '#ff6600',
+  'ambig': '#ffffff'
 }
 ```
+
+The canvas is the longest sequence length times the (rounded-up) cell width, by the number of sequences times the (rounded-up) cell height. The function returns a Promise for the canvas element. It rejects with an Error if the requested canvas exceeds the browser's canvas size limits, so for very long sequences use a smaller `width`.
 
 Fun fact: It's actually alphabet-agnostic, so you can map any character to a color and see it. So you can visualize, say, protein sequences by just setting `config.colors` to an object mapping from the IUPAC 1-letter codes to the desired color.
 
@@ -54,7 +56,7 @@ A big cause of this is the simple fact that MSAViewer _does too much_. I want a 
 
 ## OK, so what *does* this do?
 
-It draws large numbers of enormous sequences [blisteringly fast](https://aaboyles.github.io/AlignmentViewer/benchmark/) using HTML5's [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API). In case you have so many sequences that are so long it begins to get sluggish, it's also [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)-based, so you can manage it asynchronously.
+It draws large numbers of enormous sequences [blisteringly fast](https://cdcgov.github.io/AlignmentViewer/benchmark/) using HTML5's [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API). The API is [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)-based, but drawing currently happens synchronously on the main thread, so very large alignments will block the page while they render.
 
 ## Anything else?
 
