@@ -168,6 +168,18 @@ describe('alignmentViewer', () => {
     expect(ctx.fillRectCalls[0].fillStyle).toBe('#000000');
   });
 
+  it('matches lowercase single-character color keys like uppercase ones', async () => {
+    const colors = { a: '#123456', p: '#111111', ambig: '#000000' };
+    const { ctx } = await render([{ seq: 'apC' }], { width: 2, height: 2, colors });
+    const rects = ctx.fillRectCalls.filter((c) => c.w === 2 && c.h === 2);
+    expect(rects).toContainEqual({ x: 0, y: 0, w: 2, h: 2, fillStyle: '#123456' });
+    expect(rects).not.toContainEqual({ x: 0, y: 0, w: 2, h: 2, fillStyle: '#ccff00' });
+    expect(rects).toContainEqual({ x: 2, y: 0, w: 2, h: 2, fillStyle: '#111111' });
+    expect(rects).toContainEqual({ x: 4, y: 0, w: 2, h: 2, fillStyle: '#ffff00' });
+    expect(ctx.fillRectCalls[0].fillStyle).toBe('#000000');
+    expect(colors).toEqual({ a: '#123456', p: '#111111', ambig: '#000000' });
+  });
+
   it('supports non-nucleotide alphabets via custom colors', async () => {
     const { ctx } = await render(
       [{ seq: 'PPC' }],

@@ -11,6 +11,13 @@
 }(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
   return (seqs, config = {}) => {
+    // Sequences are uppercased below, so uppercase single-character color keys
+    // to match. Longer keys such as 'ambig' are kept as they are.
+    const given = Object.assign({}, config.colors);
+    const colors = {};
+    Object.keys(given).forEach(key => {
+      colors[key.length === 1 ? key.toUpperCase() : key] = given[key];
+    });
     config = Object.assign({
       width: 1,
       height: 1,
@@ -22,7 +29,7 @@
         'G': '#ff9900',
         'T': '#ff6600',
         'ambig': '#ffffff'
-      }, ('colors' in config) ? config.colors : {}),
+      }, colors),
     });
 
     return new Promise((resolve, reject) => {
