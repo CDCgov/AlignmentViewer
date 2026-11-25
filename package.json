@@ -1,12 +1,14 @@
 {
   "name": "alignment-viewer",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "A simple widget for visualizing genetic sequence alignments",
   "main": "index.js",
   "scripts": {
-    "clean": "npx rimraf dist/*.min.js",
-    "build": "npm run clean && npx uglify-es index.js -o dist/alignment-viewer.min.js",
-    "start": "npx http-server"
+    "clean": "rimraf dist/*.min.js",
+    "build": "npm run clean && uglifyjs index.js -o dist/alignment-viewer.min.js",
+    "start": "http-server",
+    "test": "vitest run",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,18 @@
   "bugs": {
     "url": "https://github.com/CDCgov/AlignmentViewer/issues"
   },
-  "homepage": "https://github.com/CDCgov/AlignmentViewer"
+  "homepage": "https://github.com/CDCgov/AlignmentViewer",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "http-server": "^14.1.1",
+    "rimraf": "^6.1.4",
+    "uglify-js": "^3.19.3",
+    "vitest": "^5.1.1"
+  },
+  "files": [
+    "index.js",
+    "dist/alignment-viewer.min.js",
+    "DISCLAIMER.md"
+  ]
 }

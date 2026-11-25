@@ -25,29 +25,44 @@
       }, ('colors' in config) ? config.colors : {}),
     });
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let longest = 0;
       let n = seqs.length;
+      const rows = [];
       for (let i = 0; i < n; i++) {
-        let s = seqs[i];
-        let seq = s.seq.toUpperCase();
+        let seq = seqs[i].seq.toUpperCase();
+        rows.push(seq);
         if (seq.length > longest) longest = seq.length;
       }
       let ch = Math.ceil(config.height);
       let cw = Math.ceil(config.width);
-      let width = longest * config.width;
-      let height = seqs.length * config.height;
+      let width = longest * cw;
+      let height = n * ch;
+      let fail = () => reject(new Error('alignmentViewer: cannot create a ' + width + 'x' + height +
+        " canvas (invalid size, or exceeds this browser's canvas limits)"));
       let canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
+      if (canvas.width !== width || canvas.height !== height) return fail();
       let context = canvas.getContext('2d', { alpha: false });
+      if (!context) return fail();
       context.fillStyle = config.colors['ambig'];
       context.fillRect(0, 0, width, height);
+      if ((width > 8192 || height > 8192 || width * height >= 16777216) && width && height) {
+        // Oversized canvases may be silently unusable; alpha:false means a working one reads alpha 255.
+        let px;
+        try {
+          px = context.getImageData(0, 0, 1, 1).data;
+        } catch {
+          return fail();
+        }
+        if (!px[0] && !px[1] && !px[2] && !px[3]) return fail();
+      }
       Object.keys(config.colors).forEach(nucleotide => {
         if(nucleotide == 'ambig') return;
         context.fillStyle = config.colors[nucleotide];
         for (let row = 0; row < n; row ++) {
-          let seq = seqs[row].seq;
+          let seq = rows[row];
           let y = Math.floor(row * ch);
           for (let col = 0; col < longest; col++) {
             let c = seq[col];
@@ -59,17 +74,17 @@
         }
       });
       if(config.showChar){
-        context.font = (config.height - 2) + 'px mono';
-        context.textAlign = 'left';
-        context.textBaseline = 'bottom';
+        context.font = Math.max(1, ch - 2) + 'px monospace';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
         context.fillStyle = 'black';
         for (let row = 0; row < n; row++) {
-          let seq = seqs[row].seq;
-          let y = row * ch + ch;
+          let seq = rows[row];
+          let y = row * ch + ch / 2;
           for (let col = 0; col < longest; col++) {
             let c = seq[col];
             if(!c) break;
-            let x = col * cw + cw/3;
+            let x = col * cw + cw / 2;
             context.fillText(c, x, y, cw);
           }
         }
