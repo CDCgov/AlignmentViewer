@@ -29,7 +29,7 @@ See [the Source Code](https://github.com/cdcgov/AlignmentViewer/blob/master/demo
 * `config.width` - OPTIONAL, the width (in pixels) _of each cell_. Please note that this is not the width of the output figure. Defaults to 1. Fractional values are rounded up to whole pixels.
 * `config.height` - OPTIONAL, the height (in pixels) _of each cell_. Please note that this is not the height of the output figure. Defaults to 1. Fractional values are rounded up to whole pixels.
 * `config.showChar` - OPTIONAL, should the character be rendered in the cell? Defaults to false. Use with caution, significantly slows down rendering.
-* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Colors you pass are merged over the defaults below, and keys should be uppercase. Any character without a color, including gaps, is drawn in the `ambig` color. Defaults:
+* `config.colors` - OPTIONAL, an object mapping from the nucleotide to the color of the corresponding cell in the output image. Colors you pass are merged over the defaults below. Single-character keys match either case, so `a` and `A` both color `A`. Any character without a color, including gaps, is drawn in the `ambig` color. Defaults:
 ```
 {
   'A': '#ccff00',
